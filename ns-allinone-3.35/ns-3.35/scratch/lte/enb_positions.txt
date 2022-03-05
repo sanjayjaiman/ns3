@@ -1,0 +1,25 @@
+# Key:
+#   enbid - Enodeb ID
+#   hbw - HorizBeamwidth
+#   orientation   - Orientation
+#   hma - HorizontalMaxAttenuation
+#   vbw - VertBeamwidth
+#   et  - ElecTilt, mt - MechTilt, 
+#   vma,- VerticallMaxAttenuation
+#   bsg - BoresightGain
+#   dl_earfcn - Down Link earfcn
+#   bw_rb - Bandwidth
+#   tx_pwr - TX Power
+#  x, y,  z,   hbw,  orientation, hma, vbw,   et,   mt,    vma,   bsg,  dl_earfcn,  bw_rb, tx_pwr
+# Test
+0,  0, 0, 30,  52.6,           90,  25, 6.9,     4,    0,   20.0,    16,      6400.0,     50.0, 15.2
+#1,  0, 4000, 30,  52.6,        270,  25, 6.9,     4,    0,   20.0,    16,      6400.0,     50.0, 15.2
+#0,  0, 0, 30,  52.6,           0,  25, 6.9,     4,    -5,   20.0,    16,      6400.0,     50.0, 40
+#1,  0, 0, 30,  52.6,          160,  25, 6.9,     4,    0,   20.0,    16,      6400,     50, 40
+# Vf Ireland DlEarfcn = 6400
+#0,  0, 0, 30,  52.6,           45,  25, 6.9,     4,    0,   20.0,    16,      6400.0,     50.0, 43.010299957
+#1,  0, 0, 30,  52.6,          160,  25, 6.9,     4,    0,   20.0,    16,      6400,     50, 43.010299957
+#2,  0, 0, 30,  52.6,          270,  25, 6.9,     4,    0,   20.0,    16,      6400,     50, 43.010299957
+# for TGIO Columbia DlEarfcn = 9585
+#  0, 0, 0, 42,    70,           30,  25, 10,     10,    6,   20.0,    16,      9585,    100, 20
+

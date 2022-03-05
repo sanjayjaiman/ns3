@@ -1,0 +1,80 @@
+#
+## Defaults for LTE simulation with:
+# - Parabolic3dAntenna
+# - Multiple Enbs 
+# - Multiple UEs
+# - Buildings 
+#
+#
+default ns3::LteEnbPhy::TxPower "20.0"
+# Transmission mode - *0=SISO 1=SISO *2=TxDiversity 3=MIMO_Spatial_Multiplexity OL 4=MIMO_Spatial_Multplexing_CL
+default ns3::LteEnbRrc::DefaultTransmissionMode "2"
+#
+default ns3::LteSimulatorHelper::AntennaModel "ns3::Parabolic3dAntennaModel"
+default ns3::Parabolic3dAntennaModel::HorizontalBeamwidth "60"
+default ns3::Parabolic3dAntennaModel::Orientation "90"
+default ns3::Parabolic3dAntennaModel::MaxHorizontalAttenuation "0"
+default ns3::Parabolic3dAntennaModel::VerticalBeamwidth "10"
+default ns3::Parabolic3dAntennaModel::ElectricalTilt "0"
+default ns3::Parabolic3dAntennaModel::MechanicalTilt "0"
+default ns3::Parabolic3dAntennaModel::MaxVerticalAttenuation "20.0"
+default ns3::Parabolic3dAntennaModel::BoresightGain "0"
+default ns3::LteSimulatorHelper::TestPropagationLoss "false"
+default ns3::LteSimulatorHelper::TestCellBringDown "false"
+default ns3::UrbanMacroCellPropagationLossModel::LosEnabled "true"
+default ns3::Hybrid3gppPropagationLossModel::ShadowingEnabled "true"
+#
+#default ns3::LteSimulatorHelper::PropagationLossModel "ns3::OkumuraHataPropagationLossModel"
+#default ns3::LteSimulatorHelper::PropagationLossModel "ns3::Cost231PropagationLossModel"
+default ns3::LteSimulatorHelper::PropagationLossModel "ns3::FriisPropagationLossModel"
+
+# If buildings present the following model will be used
+default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::Hybrid3gppPropagationLossModel"
+#default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::HybridBuildingsPropagationLossModel"
+#default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::UrbanMacroCellPropagationLossModel"
+
+default ns3::LteSimulatorHelper::SpectrumChannelModel "ns3::MultiModelSpectrumChannel"
+default ns3::LteSimulatorHelper::FadingLossModel "ns3::TraceFadingLossModel"
+#
+#
+#  UE specific SRS Periodicity; (lena-dual-stripe.cc: SRS Periodicity
+#  (has to be at least greater than the no of UEs per eNB)
+#  TS 36.213 Table 8.2-1 UE Specific SRS Periodicity Tsrs (20, 40, 80, 160, 320)
+default ns3::LteEnbRrc::SrsPeriodicity "320"
+#
+#	 * 0 - MaxTP
+#	 * 1 - Cqi Spectral efficiency
+#	 * 2 - Sinr Spectral efficiency
+#
+# default ns3::pw_PfFfMacScheduler::EfficiencyState "2"
+
+global SimulatorImplementationType "ns3::DefaultSimulatorImpl"
+global SchedulerType "ns3::MapScheduler"
+global RngSeed "1"
+global RngRun "1"
+global SharedMemoryPoolSize "4096"
+global SharedMemoryKey "1234"
+global ChecksumEnabled "false"
+global macroEnbTxPowerDbm "46"
+global interSiteDistance "500"
+global SimulationTimeSec "2"
+global PrintLogs "false"
+global PrintDefaultParams "false"
+global PrintLteTraces "true"
+global SimulationRunDlTest "true"
+global SimulationRunUlTest "false"
+global EnbCoverageRadiusM "100"
+global RandomNumberGeneratorSeed "3"
+#
+# Test mode params
+global SimulationTestMode "false"
+global SimulationTestOutputFile "simu_test_output.txt"
+global SimulationTestModeNumUEs "1"
+# X/Y range - low|high|step
+global SimulationTest_X_Range "-500|500|50"
+global SimulationTest_Y_Range "-300|1000|50"
+#
+global UeRandWalkMinMaxSpeed "[Min=10|Max=60]"
+global UePositionsFile "scratch/lte/ue_positions.txt"
+global EnbPositionsFile "scratch/lte/enb_positions.txt"
+global BuildingPositionsFile "scratch/lte/building_positions.txt"

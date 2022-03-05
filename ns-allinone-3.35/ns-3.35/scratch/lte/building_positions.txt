@@ -1,0 +1,4 @@
+# xmin,  xmax,   ymin,  ymax,  zmin,  zmax,  num_floors
+-200,    -100,    700,  800,    0,    160,   40
+100,      200,    700,  800,    0,     50,    2
+
