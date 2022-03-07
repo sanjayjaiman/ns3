@@ -1,2 +1,0 @@
-set object 1 rect from -200,700 to -100,800
-set object 2 rect from 100,700 to 200,800
