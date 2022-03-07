@@ -180,7 +180,6 @@ void LteSimulatorHelper::print_attr (std::string params[], uint32_t size, std::o
 		std::cout << "\t" << params[i] << ":" << std::endl;
 		m_lteHelper->GetAttribute(params[i], st_value);
 		os << "\t" << params[i] << " = " << st_value.Get() << std::endl;
-		std::cout << "\t" << st_value.Get() << std::endl;
 	}
 }
 
@@ -209,8 +208,6 @@ void LteSimulatorHelper::print_lte_helper_values() {
 		TypeId tid = type_value.Get();
 		os << "\t" <<helper_tid_params[i] << " = " <<  tid.GetName() << std::endl;
 	}
-
-	std::cout << os.str() << std::endl;
 };
 
 void LteSimulatorHelper::set_fading_spectrum_and_scheduler () {

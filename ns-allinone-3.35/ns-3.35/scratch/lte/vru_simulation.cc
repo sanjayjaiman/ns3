@@ -14,7 +14,7 @@ using namespace ns3;
 // #define CONNECT_SINGLE_ENB
 
 // Logging keyword
-NS_LOG_COMPONENT_DEFINE ("vru_simulation.cc");
+NS_LOG_COMPONENT_DEFINE ("vru_simulation");
 
 static std::string loadfile = "scratch/lte/input-defaults.txt";
 
