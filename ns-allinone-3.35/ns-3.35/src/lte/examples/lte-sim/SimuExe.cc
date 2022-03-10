@@ -19,6 +19,14 @@
  */
 
 #include "SimuExe.h"
+#include "ns3/flow-monitor-helper.h"
+#include "ns3/radio-bearer-stats-calculator.h"
+#include "ns3/ipv4-global-routing-helper.h"
+#include "ns3/point-to-point-helper.h"
+#include "ns3/ipv4-flow-classifier.h"
+#include "ns3/gnuplot.h"
+#include "ns3/gnuplot-helper.h"
+#include "ns3/netanim-module.h"
 
 namespace ns3 {
 
@@ -115,7 +123,6 @@ void SimuExe::init() {
 	std::ostringstream os;
 	//---------------------------------------------------------------------------
 	// 7. Setup fading model & propagation model
-//	std::cout << "Config ENBs: Set Path Loss model ..." << std::endl;
 	lte_simu_helper->set_path_loss_model();
 	if (sim_params->use_buildings()) {
 		lte_simu_helper->add_buildings();
@@ -145,12 +152,9 @@ void SimuExe::init() {
 		// Set the channel condition to LOS
 //		Ptr<ChannelConditionModel> losCondModel = CreateObject<AlwaysLosChannelConditionModel> ();
 	}
-//	std::cout << "Config ENBs: Add ENB nodes ..." << std::endl;
 	lte_simu_helper->add_enb_nodes(enb_nodes, enb_cfg, os);
 
-//	std::cout << "Config ENBs: Calling set_fading_spectrum_and_scheduler ..." << std::endl;
 	lte_simu_helper->set_fading_spectrum_and_scheduler();
-//	std::cout << "Config ENBs: Calling print_enb_to_cell_id_mapping ..." << std::endl;
 	lte_simu_helper->print_enb_to_cell_id_mapping(os);
 	os << "================================================================================\n";
 	print_path_loss_model(os);
@@ -158,7 +162,6 @@ void SimuExe::init() {
 	os << std::endl;
 
 	lte_simu_helper->LogEnable(verbosity > 1);
-//	std::cout << "Config ENBs: Calling verify_init_values ..." << std::endl;
 	lte_simu_helper->verify_init_values(verbosity, sim_params->print_defaults());
     if (verbosity >= 1) {
 	    lte_simu_helper->print_lte_helper_values();
@@ -173,7 +176,6 @@ void SimuExe::init() {
 		std::cout << os.str();
 	}
 */
-//	std::cout << "Config ENBs: installing callbacks ..." << std::endl;
 	BooleanValue bool_val;
 	// Connect to trace sources in all eNodeB
 	Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",

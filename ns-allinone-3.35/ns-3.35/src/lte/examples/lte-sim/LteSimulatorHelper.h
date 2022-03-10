@@ -38,14 +38,6 @@
 #include <iomanip>
 #include <ctime>
 #include "ns3/object.h"
-#include "ns3/radio-bearer-stats-calculator.h"
-#include "ns3/ipv4-global-routing-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/flow-monitor-helper.h"
-#include "ns3/ipv4-flow-classifier.h"
-#include "ns3/gnuplot.h"
-#include "ns3/gnuplot-helper.h"
-#include "ns3/netanim-module.h"
 #include "ue_mobility_helper.h"
 
 #include <ns3/hybrid-3gpp-propagation-loss-model.h>

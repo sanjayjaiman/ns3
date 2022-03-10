@@ -79,7 +79,7 @@ LteSimulatorHelper::GetTypeId () {
                                        &LteSimulatorHelper::GetBuildingsPropagationLossModel),
                    MakeStringChecker ())
     .AddAttribute ("FadingLossModel",
-                   "Fading Loss Model",
+                   "Propagation Loss Model",
                    StringValue (""),
                    MakeStringAccessor (&LteSimulatorHelper::SetFadingLossModel,
                                        &LteSimulatorHelper::GetFadingLossModel),
@@ -177,7 +177,6 @@ template <class myType>
 void LteSimulatorHelper::print_attr (std::string params[], uint32_t size, std::ostringstream& os) {
 	myType st_value;
 	for (uint32_t i = 0; i < size; i++) {
-		std::cout << "\t" << params[i] << ":" << std::endl;
 		m_lteHelper->GetAttribute(params[i], st_value);
 		os << "\t" << params[i] << " = " << st_value.Get() << std::endl;
 	}
@@ -208,6 +207,8 @@ void LteSimulatorHelper::print_lte_helper_values() {
 		TypeId tid = type_value.Get();
 		os << "\t" <<helper_tid_params[i] << " = " <<  tid.GetName() << std::endl;
 	}
+
+	std::cout << os.str() << std::endl;
 };
 
 void LteSimulatorHelper::set_fading_spectrum_and_scheduler () {
@@ -502,6 +503,7 @@ void LteSimulatorHelper::verify_init_values(uint32_t verbose, bool print_default
 	};
 	if (print_defaults) {
 		os << "*** Deafult params ***" << std::endl;
+
 		for (uint32_t i = 0; i < sizeof(objs_) / sizeof(ObjAndParam_t); i++) {
 			std::string tidName = objs_[i].obj;
 			std::string paramName = objs_[i].param;
@@ -530,7 +532,6 @@ void LteSimulatorHelper::verify_init_values(uint32_t verbose, bool print_default
 		if (LteSimulatorHelper::get_initial_value(tid, "PathlossModel", type, value)) {
 			os << "\tPathlossModel (" << type << ") = " << value << std::endl;
 		}
-		std::cout << "*** print_helper_defaults ***" << std::endl;
 		LteSimulatorHelper::print_helper_defaults(tid, os);
 
 		if (verbose) {

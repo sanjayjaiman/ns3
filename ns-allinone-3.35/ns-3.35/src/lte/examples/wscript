@@ -64,12 +64,16 @@ def build(bld):
     obj = bld.create_ns3_program('lena-uplink-power-control',
                                  ['lte'])
     obj.source = 'lena-uplink-power-control.cc'
-
-    obj = bld.create_ns3_program('lena-radio-link-failure',
-                                 ['lte'])
-    obj.source = 'lena-radio-link-failure.cc'
     
     if bld.env['ENABLE_EMU']:
         obj = bld.create_ns3_program('lena-simple-epc-emu',
                                      ['lte', 'fd-net-device'])
         obj.source = 'lena-simple-epc-emu.cc'
+
+    obj = bld.create_ns3_program('lte-sim',
+                                 ['flow-monitor', 'internet', 'mobility', 'config-store', 'lte', 'netanim', 'ns3-ai'])
+    obj.source = ["lte-sim/%s" % s for s in [
+                'scratch-simulator.cc', 'BuildingPositionAlloc.cc', 'RunTest.cc', 'UeConfig.cc', 'EnbConfig.cc',
+                'ue_mobility_helper.cc', 'LteSimulatorHelper.cc',
+                'SimuExe.cc', 'parabolic-3d-antenna-helper.cc', 'SimulationParams.cc'] ]
+
