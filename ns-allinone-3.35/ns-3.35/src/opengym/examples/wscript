@@ -5,4 +5,8 @@ def build(bld):
                                  ['opengym', 'internet', 'mobility', 'config-store', 'lte', 'netanim', 'ns3-ai'])
     obj.source = ["interference-pattern/%s" % s for s in [
                 'mygym.cc', 'sim.cc'] ]
+    obj = bld.create_ns3_program('rl-tcp',
+                                 ['opengym', 'internet', 'mobility', 'point-to-point-layout', 'lte', 'flow-monitor', 'ns3-ai'])
+    obj.source = ["rl-tcp/%s" % s for s in [
+                'tcp-rl-env.cc', 'sim.cc', 'tcp-rl.cc'] ]
 
