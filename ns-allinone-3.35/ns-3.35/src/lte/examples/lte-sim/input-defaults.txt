@@ -23,14 +23,15 @@ default ns3::LteSimulatorHelper::TestPropagationLoss "false"
 default ns3::LteSimulatorHelper::TestCellBringDown "false"
 default ns3::UrbanMacroCellPropagationLossModel::LosEnabled "true"
 default ns3::Hybrid3gppPropagationLossModel::ShadowingEnabled "true"
+default ns3::Hybrid3gppPropagationLossModel::HeightThreshold "45"
 #
 #default ns3::LteSimulatorHelper::PropagationLossModel "ns3::OkumuraHataPropagationLossModel"
 #default ns3::LteSimulatorHelper::PropagationLossModel "ns3::Cost231PropagationLossModel"
 default ns3::LteSimulatorHelper::PropagationLossModel "ns3::FriisPropagationLossModel"
 
 # If buildings present the following model will be used
-default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::Hybrid3gppPropagationLossModel"
-#default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::HybridBuildingsPropagationLossModel"
+#default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::Hybrid3gppPropagationLossModel"
+default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::HybridBuildingsPropagationLossModel"
 #default ns3::LteSimulatorHelper::BuildingsPropagationLossModel "ns3::UrbanMacroCellPropagationLossModel"
 
 default ns3::LteSimulatorHelper::SpectrumChannelModel "ns3::MultiModelSpectrumChannel"
@@ -68,11 +69,11 @@ global RandomNumberGeneratorSeed "3"
 #
 # Test mode params
 global SimulationTestMode "false"
-global SimulationTestOutputFile "simu_test_output.txt"
+global SimulationTestOutputFile "SC5_BuildingsPropagationLossModel.txt"
 global SimulationTestModeNumUEs "1"
 # X/Y range - low|high|step
-global SimulationTest_X_Range "-500|500|50"
-global SimulationTest_Y_Range "-300|1000|50"
+global SimulationTest_X_Range "-200|200|5"
+global SimulationTest_Y_Range "-10|220|5"
 #
 global UeRandWalkMinMaxSpeed "[Min=10|Max=60]"
 global UePositionsFile "src/lte/examples/lte-sim/ue_positions.txt"

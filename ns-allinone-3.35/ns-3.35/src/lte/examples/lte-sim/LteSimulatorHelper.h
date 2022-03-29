@@ -44,6 +44,7 @@
 #include <ns3/okumura-hata-propagation-loss-model.h>
 #include <ns3/constant-position-mobility-model.h>
 #include <ns3/three-gpp-propagation-loss-model.h>
+#include <ns3/hybrid-buildings-propagation-loss-model.h>
 
 #include <ns3/parabolic-antenna-model.h>
 #include <ns3/three-gpp-antenna-array-model.h>
@@ -117,7 +118,6 @@ public:
   void          print_buildings_info_comma_seperated(std::ostringstream& os);
   Vector        get_position_of_enb(uint32_t enb_id);
   TypeId        get_path_loss_model();
-  void          set_path_loss_model();
   NodeContainer get_ue_nodes();
   NodeContainer get_active_ue_nodes();
   NodeContainer get_idle_ue_nodes();
@@ -156,9 +156,9 @@ public:
   uint32_t sift_ues_for_enbid(uint32_t enb_id, NodeContainer &container, NodeContainer &out);
   void     find_ues_for_closest_enbid(Ptr<EnbConfig> enb_cfg, NodeContainer &ue_container, std::map<uint32_t, NodeContainer> &out, std::ostringstream& os);
   NetDeviceContainer get_ue_container_for_enbid(uint32_t enb_id);
-
+ 
 private:
-  void enb_set_power(NetDeviceContainer& enbDev, uint32_t i, double tx_pwr, uint32_t verbose);
+  void print_enbs_power(NetDeviceContainer& enbDev);
   bool setup_3d_parabolic_antenna_for_enb(uint32_t i, Ptr<EnbConfig>& enb_cfg, std::ostringstream& os);
   template <class myType> void print_attr (std::string params[], uint32_t size, std::ostringstream& os);
 

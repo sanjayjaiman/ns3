@@ -156,7 +156,7 @@ HybridBuildingsPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<Mobility
   bool isAIndoor = a1->IsIndoor ();
   bool isBIndoor = b1->IsIndoor ();
 
-
+  NS_LOG_INFO ("a x/y = (" << a->GetPosition ().x << "," <<  a->GetPosition ().y << ");  b x/y = (" << b->GetPosition ().x << ", " << b->GetPosition ().y << ")");
   if (!isAIndoor) // a is outdoor
     {
       if (!isBIndoor) // b is outdoor

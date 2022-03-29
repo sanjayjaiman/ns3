@@ -168,11 +168,6 @@ LteSimulatorHelper::get_path_loss_model() {
 	return TypeId::LookupByName (m_popagationLossModel);
 }
 
-void
-LteSimulatorHelper::set_path_loss_model() {
-	m_lteHelper->SetPathlossModelType(get_path_loss_model());
-}
-
 template <class myType>
 void LteSimulatorHelper::print_attr (std::string params[], uint32_t size, std::ostringstream& os) {
 	myType st_value;
@@ -236,37 +231,35 @@ void LteSimulatorHelper::set_fading_spectrum_and_scheduler () {
 };
 
 void  LteSimulatorHelper::add_buildings() {
-//	SetPropagationLossModel("ns3::ThreeGppUmaPropagationLossModel");
 	SetPropagationLossModel(m_buildingsPopagationLossModel);
 	buildingPositionAlloc = CreateObject<BuildingPositionAllocator>();
     m_lteHelper->SetPathlossModelAttribute ("ShadowSigmaExtWalls", DoubleValue (0));
     m_lteHelper->SetPathlossModelAttribute ("ShadowSigmaOutdoor", DoubleValue (1));
     m_lteHelper->SetPathlossModelAttribute ("ShadowSigmaIndoor", DoubleValue (1.5));
-
+	TypeId tid = get_path_loss_model();
+	if (tid == HybridBuildingsPropagationLossModel::GetTypeId())  {
+//		double freq = 816e3;
+//		std::cout << "*** Setting freq in buildings to " << freq << std::endl;
+//		m_lteHelper->SetPathlossModelAttribute ("Frequency", DoubleValue (freq));
+		m_lteHelper->SetPathlossModelAttribute ("Environment", EnumValue (UrbanEnvironment));
+		m_lteHelper->SetPathlossModelAttribute ("CitySize", EnumValue (SmallCity));
+	}
 		// use always LOS model
 //		m_lteHelper->SetPathlossModelAttribute ("Los2NlosThr", DoubleValue (1e6));
 	std::string building_pos_file = sim_params->building_pos_file();
-	if (building_pos_file != "") {
-		buildingPositionAlloc->Add(building_pos_file);
-	}
-	else {
-		std::cout << "Buildings file not specified" << std::endl;
-		exit(0);
-	}
+	NS_ASSERT_MSG(building_pos_file != "", "Buildings file not specified");
+	buildingPositionAlloc->Add(building_pos_file);
 
-//		for (uint32_t j = 0; j < all_ue_nodes.GetN(); j++) {
-//				Ptr<Node> ueNode = all_ue_nodes.Get(j);
-//				Ptr<MobilityModel> a = ueNode->GetObject<MobilityModel> ();
-//				if (a != nullptr) {
-//					std::cout << "--- A found" << std::endl;
-//				}
-//      			Ptr<MobilityBuildingInfo> buildingInfoA = ueNode->GetObject<MobilityBuildingInfo> ();
-//				if (a != nullptr) {
-//					std::cout << "--- buildingInfoA found; Num floors = " << buildingInfoA->GetFloorNumber() << std::endl;
-//				}
-//      			buildingInfoA->MakeConsistent (a);
-//		}
-
+	NodeContainer all_ue_nodes = get_ue_nodes();
+	uint32_t num_ues = all_ue_nodes.GetN();
+//	std::cout << "--- Num UEs = " << num_ues << std::endl;
+	for (uint32_t j = 0; j < num_ues; j++) {
+		Ptr<Node> ueNode = all_ue_nodes.Get(j);
+		Ptr<MobilityModel> mm = ueNode->GetObject<MobilityModel> ();
+		NS_ASSERT_MSG(mm != nullptr, "MobilityModel NOT found on UE");
+		Ptr<MobilityBuildingInfo> buildingInfo = ueNode->GetObject<MobilityBuildingInfo> ();
+		NS_ASSERT_MSG(buildingInfo != nullptr, "buildingInfo NOT found on UE");
+	}
 }
 
 void  LteSimulatorHelper::print_buildings_info_comma_seperated(std::ostringstream& os) {
@@ -378,21 +371,16 @@ uint32_t LteSimulatorHelper::get_ul_earfcn(uint32_t dl_earfcn) {
 	return 0;
 }
 
-void LteSimulatorHelper::enb_set_power(NetDeviceContainer& enbDev, uint32_t i, double tx_pwr, uint32_t verbose) {
+void LteSimulatorHelper::print_enbs_power(NetDeviceContainer& enbDev) {
+	uint32_t i = 0;
 	for (NetDeviceContainer::Iterator iter = enbDev.Begin(); iter != enbDev.End(); iter++) {
 		Ptr<LteEnbNetDevice> enb_net_dev_p = ns3::DynamicCast<LteEnbNetDevice>(*iter);
 		Ptr<LteEnbPhy> phy_ = enb_net_dev_p->GetPhy();
-		phy_->SetTxPower(tx_pwr);
-		std::cout << "****** ENB" << i << " Set Tx POWER : " << tx_pwr << std::endl;
-	}
-	if (verbose >= 1) {
-		for (NetDeviceContainer::Iterator iter = enbDev.Begin(); iter != enbDev.End(); iter++) {
-			Ptr<LteEnbNetDevice> enb_net_dev_p = ns3::DynamicCast<LteEnbNetDevice>(*iter);
-			Ptr<LteEnbPhy> phy_ = enb_net_dev_p->GetPhy();
-			double tx_pwr = phy_->GetTxPower();
-			std::cout << "\tTx POWER = " << tx_pwr << std::endl;
-		}
-	}
+		double tx_pwr = phy_->GetTxPower();
+		std::cout <<  "****** ENB" << i++ << "\n\tTx POWER = " << tx_pwr << std::endl;
+		uint16_t ul_bandwidth = enb_net_dev_p-> GetUlBandwidth ();
+		std::cout << "\tul_bandwidth : " << ul_bandwidth << std::endl;
+	}	
 }
 
 void LteSimulatorHelper::add_enb_positions(Ptr<ListPositionAllocator>& enbPositionAlloc, Ptr<LteSimulatorHelper>& simu_helper_, uint32_t numEnb) {
@@ -626,7 +614,6 @@ void LteSimulatorHelper::find_ues_for_closest_enbid(Ptr<EnbConfig> enb_cfg, Node
 			enb_pos_map[enb_id] = enb_pos_vec;
 		}
 	}
-	os << "================================================================================\n";
 	os << " Distance to ENBs::" << std::endl;
   	for (NodeContainer::Iterator iter = ue_container.Begin (); iter != ue_container.End (); ++iter)  {
 		Ptr<Node> object = (*iter);
@@ -867,6 +854,10 @@ void
 LteSimulatorHelper::add_enb_nodes(NodeContainer& enb_nodes, Ptr<EnbConfig>& enb_cfg, std::ostringstream& os) {
 //	uint32_t num_enbs_allocated = enb_nodes.GetN();
 //	std::cout << "Total ENBS = " << num_enbs_allocated << std::endl;
+//  reset path loss model to what is configured - (should be done before LteHelper::ChannelModelInitialization which is called during initialization)
+	TypeId pl_ = get_path_loss_model();
+//	std::cout << "-- PL model = " << pl_ << std::endl;
+	m_lteHelper->SetPathlossModelType(pl_);
 	enb_indicies = enb_cfg->get_indicies();
 	NS_ASSERT(enb_indicies.size() == enb_nodes.GetN());
 	uint32_t i = 0;
@@ -924,7 +915,7 @@ LteSimulatorHelper::add_enb_nodes(NodeContainer& enb_nodes, Ptr<EnbConfig>& enb_
 		phy_->SetTxPower(tx_pwr);
 		Ptr<LteSpectrumPhy> dl_spec_phy_ = phy_->GetDownlinkSpectrumPhy();
 		Ptr<AntennaModel> antenna_ = dl_spec_phy_->GetRxAntenna ();
-
+//		print_enbs_power(container_);
 		if (m_antennaModel == "ns3::Parabolic3dAntennaModel") {
 			if (enb_cfg->get_e_tilt(i, e_tilt) &&
 				enb_cfg->get_m_tilt(i, m_tilt) &&
@@ -974,6 +965,8 @@ LteSimulatorHelper::add_enb_nodes(NodeContainer& enb_nodes, Ptr<EnbConfig>& enb_
 		i++;
 	}
 	NS_ASSERT (i == enb_nodes.GetN());
+	set_fading_spectrum_and_scheduler();
+	print_enb_to_cell_id_mapping(os);
 }
 
 void

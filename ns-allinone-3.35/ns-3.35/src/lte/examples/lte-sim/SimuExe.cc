@@ -88,18 +88,18 @@ void SimuExe::init() {
 	//LogComponentEnable("PfFfMacScheduler", LOG_LEVEL_ALL);
 
 	//---------------------------------------------------------------------------
-	// 4. LTE helper
+	// 1. LTE helper
 	lte_helper = CreateObject<LteHelper>();
 	lte_simu_helper = CreateObject<LteSimulatorHelper>(lte_helper, sim_params);
 
 	//---------------------------------------------------------------------------
-	// 5. EPC helper
+	// 2. EPC helper
 	epc_helper = CreateObject<PointToPointEpcHelper> ();
 	lte_helper->SetEpcHelper (epc_helper);
 	pgw = epc_helper->GetPgwNode();
 	default_gateway_addess = epc_helper->GetUeDefaultGatewayAddress();
 	//---------------------------------------------------------------------------
-	// 7. Add eNodeBs
+	// 3. Add eNodeBs
 	
 	enb_cfg = CreateObject<EnbConfig>();
 	std::string enb_pos_file = sim_params->enb_pos_file();
@@ -121,45 +121,8 @@ void SimuExe::init() {
 	enbMobility.Install(enb_nodes);
 
 	std::ostringstream os;
-	//---------------------------------------------------------------------------
-	// 7. Setup fading model & propagation model
-	lte_simu_helper->set_path_loss_model();
-	if (sim_params->use_buildings()) {
-		lte_simu_helper->add_buildings();
-		// The following call will pull pull all the building objects from a static list inside BuildingList class
-		// and mobility from enb_nodes object.  It will put the buildings into the enb mobility object.
-		BuildingsHelper::Install (enb_nodes);
-//		std::cout << "**** BuildingsHelper::Install DONE" << std::endl;
-		if (verbosity >= 1) {
-			os << "================================================================================" << std::endl;
-			lte_simu_helper->print_buildings_info(os);
-			os << "================================================================================" << std::endl;
-			PrintGnuplottableBuildingListToFile ("buildings.txt");
-		}
-		// Create the propagation loss model
-/*
-		ObjectFactory propagationLossModelFactory = ObjectFactory ("ns3::ThreeGppUmiStreetCanyonChannelConditionModel");
-  		Ptr<ThreeGppPropagationLossModel> m_lossModel; //!< the propagation loss model
-  		m_lossModel = propagationLossModelFactory.Create<ThreeGppPropagationLossModel> ();
-		m_lossModel->SetAttribute ("Frequency", DoubleValue (3.5e9));
-		m_lossModel->SetAttribute ("ShadowingEnabled", BooleanValue (true)); // enable the shadow fading
 
-		// Set the channel condition to LOS
-		Ptr<ChannelConditionModel> losCondModel = CreateObject<AlwaysLosChannelConditionModel> ();
-		m_lossModel->SetChannelConditionModel (losCondModel);
-		*/
-//		propagaiton_loss_model = m_buildingsPopagationLossModel;
-		// Set the channel condition to LOS
-//		Ptr<ChannelConditionModel> losCondModel = CreateObject<AlwaysLosChannelConditionModel> ();
-	}
-	lte_simu_helper->add_enb_nodes(enb_nodes, enb_cfg, os);
-
-	lte_simu_helper->set_fading_spectrum_and_scheduler();
-	lte_simu_helper->print_enb_to_cell_id_mapping(os);
-	os << "================================================================================\n";
-	print_path_loss_model(os);
-	os << "================================================================================\n";
-	os << std::endl;
+	lte_simu_helper->add_enb_nodes(enb_nodes, enb_cfg, os);  //Sets path loss model / fading as well
 
 	lte_simu_helper->LogEnable(verbosity > 1);
 	lte_simu_helper->verify_init_values(verbosity, sim_params->print_defaults());
@@ -167,15 +130,6 @@ void SimuExe::init() {
 	    lte_simu_helper->print_lte_helper_values();
     }
 
-/*
-	std::ostringstream os; 
-	lte_simu_helper->add_enb_nodes(enb_nodes, enb_cfg, os);
-	lte_simu_helper->print_enb_to_cell_id_mapping(os);
-	os << std::endl;
-	if (sim_params->verbose >= 1) {
-		std::cout << os.str();
-	}
-*/
 	BooleanValue bool_val;
 	// Connect to trace sources in all eNodeB
 	Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
@@ -193,13 +147,8 @@ void SimuExe::init() {
 	}
 
 	//---------------------------------------------------------------------------
-	// 6. Create a single RemoteHost
-	// 9. Install IP stack and address
-
-
-	//---------------------------------------------------------------------------
-	// 8. UE
-
+	// 4. Create a single RemoteHost
+	// 5. Install IP stack and address
 
 	NodeContainer remote_host_container;
 	remote_host_container.Create(1);
@@ -215,6 +164,9 @@ void SimuExe::init() {
 	ifaces_internet_devs = ipv4Addh.Assign(internetDevices);
 	std::vector<uint32_t> enb_ids = enb_cfg->get_indicies();
 
+	//---------------------------------------------------------------------------
+	// 6. UEs
+
 	lte_simu_helper->install_ue_nodes(enb_cfg, ue_cfg, verbosity);
 	ue_map.empty();
 	
@@ -224,6 +176,7 @@ void SimuExe::init() {
 //	std::cout << "******** num_ues_allocated = " << all_ue_nodes.GetN() << " ********" << std::endl;
 
 	if (ue_active_nodes.GetN()) {
+		os << "================================================================================" << std::endl;
 		os << "\nNum Active UEs allocated = " << ue_active_nodes.GetN()<< "; UE cfg file = " << sim_params->ue_pos_file() << std::endl;
 		os << "Active UEs - \n";
 		os << get_ue_desc_str(ue_active_nodes);
@@ -246,6 +199,27 @@ void SimuExe::init() {
 		Vector enb_pos = enbPositionAlloc->GetNext();
 		os << "\tENB" << id << " pos = (" << enb_pos.x << ", " << enb_pos.y << ", "<< enb_pos.z << ")" << std::endl;
 	}
+
+	if (sim_params->use_buildings()) {
+		BuildingsHelper::Install (enb_nodes);
+		BuildingsHelper::Install (all_ue_nodes);
+	//		std::cout << "**** BuildingsHelper::Install DONE" << std::endl;
+		lte_simu_helper->add_buildings();
+
+		// The following call will pull pull all the building objects from a static list inside BuildingList class
+		// and mobility from enb_nodes object.  It will put the buildings into the enb mobility object.
+
+		if (verbosity >= 1) {
+			os << "================================================================================" << std::endl;
+			lte_simu_helper->print_buildings_info(os);
+			PrintGnuplottableBuildingListToFile ("buildings.txt");
+		}
+	}
+
+	os << "================================================================================\n";
+	print_path_loss_model(os);
+	os << "================================================================================\n";
+	os << std::endl;
 
 	if (idle_ue_nodes.GetN()) {
 		os << "Idle UEs - \n";
@@ -352,23 +326,6 @@ void SimuExe::init() {
 		NS_ASSERT_MSG(enb_dev_ptr != nullptr, "NO ATTACH to ENB; enb_dev_ptr is NULL");
 //			std::cout << "\tCell ID = " << enb_dev_ptr->GetCellId() << std::endl;
 		lte_helper->Attach(ue_net_dev_container, enb_dev_ptr);
-	}
-
-	
-	if (sim_params->use_buildings()) {
-		BuildingsHelper::Install (all_ue_nodes);
- 		// The following code done by BuildingsHelper::Install
-		 /*
-		for (BuildingList::Iterator iter = BuildingList::Begin(); iter !=  BuildingList::End(); iter++) {
-			Ptr<Building> building = *iter;
-			for (uint32_t j = 0; j < all_ue_nodes.GetN(); j++) {
-				Ptr<Node> enbNode = all_ue_nodes.Get(j);
-  	    		Ptr<ConstantPositionMobilityModel> bmm = enbNode->GetObject<ConstantPositionMobilityModel> ();
-      			Ptr<MobilityBuildingInfo> buildingInfo = CreateObject<MobilityBuildingInfo> (building);
-  				bmm->AggregateObject (buildingInfo);
-			}
-		}
-		*/
 	}
 
 
@@ -543,7 +500,6 @@ void SimuExe::run() {
  */
 void SimuExe::printVruNetworkTopo(Ipv4InterfaceContainer ifaces, NodeContainer enb_nodes,
 		NodeContainer ue_nodes) {
-	std::cout << std::endl	<< "================================================================================" << std::endl;
 	std::cout << std::endl;
 	std::cout << "RemoteHost <----p2p----->  _______EPC_________ " << std::endl;
 	std::cout << "                             P-GW      S-GW    <------------> eNB <-------------> UE" << std::endl;
@@ -605,7 +561,6 @@ void SimuExe::printEnbInfo(NodeContainer enb_nodes) {
 				<< (ipv4->GetAddress(1, 0)).GetLocal() << std::endl;
 
 	}
-	std::cout << "================================================================================" << std::endl;
 	std::cout << std::flush;
 }
 
@@ -679,7 +634,6 @@ void SimuExe::get_ip_for_ues(NodeContainer& ue_nodes) {
  */
 void SimuExe::printUeInfo(NodeContainer ue_nodes) {
 
-	std::cout << std::endl << "================================================================================" << std::endl;
 	std::cout << "UE Info" << std::endl
 			<< "------------------------------------------------------------" << std::endl;
 

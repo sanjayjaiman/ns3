@@ -7,7 +7,9 @@
 #3, 100, -500, 0, const_velocity, 50, 60, -0
 #
 # Constant position UE - edges of coverage with azimuth90 and et4
-1, -200, 500, 1.5
+#1, -200, 500, 1.5
+# For testing with buildings
+1, 0, 100, 1.5
 #
 #4, 6300, 0, 1.5
 #5, 8300, 0, 1.5

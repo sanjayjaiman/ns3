@@ -56,6 +56,8 @@ void get_int_range_values(std::string param, std::vector<int32_t>& range_x) {
 	range_x.push_back(step);
 }
 
+#define MIN_DISTANCE_FROM_ENB 10
+#define ADJUST_MIN_DISTANCE false
 
 void  RunTest::build_range_vec() {
 	std::vector<int32_t> range_x;
@@ -72,12 +74,14 @@ void  RunTest::build_range_vec() {
 	int32_t r2_y = range_y[1];
 	int32_t step_y = range_y[2];
 //		std::cout << "range = " << r1_x << "|" << r2_x << "; spre = " << step_x << std::endl;	
-	for (double y = r2_y; y >= r1_y; y -= step_y) {
+	for (double y = r2_y; y >= r1_y; y = y-step_y) {
 		std::vector<double> x_vec;
 		double y_ = y;
 		for (double x = r1_x; x <= r2_x; x += step_x) {
-			while (sqrt(pow(x,2) + pow(y_,2)) < 35) {
-				y_ += 35;
+			if (ADJUST_MIN_DISTANCE) {
+				while (sqrt(pow(x,2) + pow(y_,2)) < MIN_DISTANCE_FROM_ENB) {
+					y_ += MIN_DISTANCE_FROM_ENB;
+				}
 			}
 			x_vec.push_back(x);
 		}

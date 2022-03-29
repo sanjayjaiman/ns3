@@ -219,7 +219,11 @@ const
 double
 BuildingsPropagationLossModel::DoCalcRxPower (double txPowerDbm, Ptr<MobilityModel> a, Ptr<MobilityModel> b) const
 {
-  return txPowerDbm - GetLoss (a, b) - GetShadowing (a, b);
+  double loss = GetLoss (a, b);
+  double shadowing = GetShadowing (a, b);
+  double rxpower = txPowerDbm - loss - shadowing;
+//  std::cout << "txPowerDbm = " << txPowerDbm << "; loss= " << loss << "; shadowing = " << shadowing << "; rxpower = " << rxpower << std::endl;
+  return rxpower;
 }
 
 int64_t
