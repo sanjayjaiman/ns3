@@ -62,6 +62,7 @@ OneIntegerAverageTestCase::DoRun (void)
 
   double sum = 0;
   double sqrSum = 0;
+  (void)sqrSum;
   double min;
   double max;
   double mean;

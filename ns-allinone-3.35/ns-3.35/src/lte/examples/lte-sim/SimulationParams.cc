@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Sanjay Jaiman <sjaiman@parallelwireless.com>
+ * Author: Sanjay Jaiman <sanjayjaiman@yahoo.com>
  */
 
 #include "SimulationParams.h"
@@ -166,6 +166,7 @@ SimulationParameters::SimulationParameters() : m_numEnb(1), m_numUes(2),
 	dlUdp.set_simu_stop_time(sim_time_secs);
 	ulUdp.set_simu_stop_time(sim_time_secs);
 };
+static uint32_t simbuffer_len = 10000;
 
 /**
  * Flow Monitor File Name
@@ -174,13 +175,14 @@ std::string SimulationParameters::getLogXmlFilename() {
 	time_t rawtime;
 	struct tm* timeinfo;
 	char buffer[80];
-	char simbuffer[10000];
-
+	bzero(buffer, 80);
+	char simbuffer[simbuffer_len];
+	bzero(simbuffer, simbuffer_len);
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
 	strftime(buffer, sizeof(buffer), "%Y%m%d-%H%M%S%Z", timeinfo);
-	sprintf(simbuffer, "vruSimLog%s_eNB%d_%.0fm_UE%d_%d.xml", buffer, m_numEnb,
+	snprintf(simbuffer, simbuffer_len, "vruSimLog%s_eNB%d_%.0fm_UE%d_%d.xml", buffer, m_numEnb,
 			enbCoverageRadiusm, m_numUes, transMode);
 
 	std::string filename(simbuffer);
@@ -196,13 +198,13 @@ std::string SimulationParameters::getConfigXmlFilename() {
 	time_t rawtime;
 	struct tm* timeinfo;
 	char buffer[80];
-	char simbuffer[10000];
+	char simbuffer[simbuffer_len];
 
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
 	strftime(buffer, sizeof(buffer), "%Y%m%d-%H%M%S%Z", timeinfo);
-	sprintf(simbuffer, "vruSimConfig%s_eNB%d_%.0fm_UE%d_%d.xml", buffer, m_numEnb,
+	snprintf(simbuffer, simbuffer_len, "vruSimConfig%s_eNB%d_%.0fm_UE%d_%d.xml", buffer, m_numEnb,
 			enbCoverageRadiusm, m_numUes, transMode);
 
 	std::string filename(simbuffer);

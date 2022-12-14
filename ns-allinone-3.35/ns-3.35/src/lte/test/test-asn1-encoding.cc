@@ -29,6 +29,7 @@
 
 #include "ns3/lte-rrc-header.h"
 #include "ns3/lte-rrc-sap.h"
+#include <string>
 
 using namespace ns3;
 
@@ -56,7 +57,7 @@ public:
     pkt->CopyData (buffer, psize);
     for (uint32_t i = 0; i < psize; i++)
       {
-        sprintf (&sbuffer[i * 3],"%02x ",buffer[i]);
+        snprintf (&sbuffer[i * 3], 1, "%02x ",buffer[i]);
       }
     return std::string (sbuffer);
   }

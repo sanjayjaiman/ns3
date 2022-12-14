@@ -68,7 +68,8 @@ public:
 
   // use underlying AttributeValue to get return element type
   /** Item type of container returned by Get. */
-  typedef typename std::result_of<decltype(&A::Get)(A)>::type item_type;
+//  typedef typename std::result_of<decltype(&A::Get)(A)>::type item_type;
+  typedef typename std::invoke_result<decltype(&A::Get), A>::type item_type;
   /** Type of container returned. */
   typedef C<item_type> result_type;
 
