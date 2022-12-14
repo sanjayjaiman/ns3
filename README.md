@@ -12,3 +12,8 @@ This contains example code to run LTE simulation environment with an ability to 
 
 Finally the simulation would run with any environment setup and obtain average throughput values over the time simulation has been run.
 
+Usage:
+In order to build an run this package from the "ns3/ns-allinone-3.35/ns-3.35" dir do the following:
+> ./waf configure --enable-examples --enable-tests
+> ./waf build
+> ./waf --run lte-sim
