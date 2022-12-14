@@ -14,6 +14,6 @@ Finally the simulation would run with any environment setup and obtain average t
 
 Usage:
 In order to build an run this package from the "ns3/ns-allinone-3.35/ns-3.35" dir do the following:
-> ./waf configure --enable-examples --enable-tests
-> ./waf build
-> ./waf --run lte-sim
+1 ./waf configure --enable-examples --enable-tests
+2 ./waf build
+3 ./waf --run lte-sim
