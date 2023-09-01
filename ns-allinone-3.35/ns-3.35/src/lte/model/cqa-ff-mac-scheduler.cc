@@ -688,7 +688,6 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
 
   // RACH Allocation
-  uint16_t rbAllocatedNum = 0;
   std::vector <bool> ulRbMap;
   ulRbMap.resize (m_cschedCellConfig.m_ulBandwidth, false);
   ulRbMap = m_ffrSapProvider->GetAvailableUlRbg ();
@@ -702,7 +701,6 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
     {
       if ((*it) == true )
         {
-          rbAllocatedNum++;
           if (tmpMinBandwidth > maxContinuousUlBandwidth)
             {
               maxContinuousUlBandwidth = tmpMinBandwidth;
@@ -1505,7 +1503,6 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   // 3) Creating the correspondent DCIs (Generate the transmission opportunities by grouping the RBGs of the same RNTI)
   //FfMacSchedSapUser::SchedDlConfigIndParameters ret;
   itMap = allocationMapPerRntiPerLCId.begin ();
-  int counter = 0;
   std::map<uint16_t, double> m_rnti_per_ratio;
 
   while (itMap != allocationMapPerRntiPerLCId.end ())
@@ -1539,7 +1536,6 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
             {
               worstCqi = it->second.cqi_value_for_lc;
             }
-          counter++;
         }
 
       newDci.m_mcs.push_back (m_amc->GetMcsFromCqi (worstCqi));

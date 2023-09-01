@@ -520,7 +520,6 @@ PfFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
 
 
   // RACH Allocation
-  uint16_t rbAllocatedNum = 0;
   std::vector <bool> ulRbMap;
   ulRbMap.resize (m_cschedCellConfig.m_ulBandwidth, false);
   ulRbMap = m_ffrSapProvider->GetAvailableUlRbg ();
@@ -534,7 +533,6 @@ PfFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
     {
       if ((*it) == true )
         {
-          rbAllocatedNum++;
           if (tmpMinBandwidth > maxContinuousUlBandwidth)
             {
               maxContinuousUlBandwidth = tmpMinBandwidth;

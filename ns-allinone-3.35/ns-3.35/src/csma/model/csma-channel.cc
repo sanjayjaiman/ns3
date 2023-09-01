@@ -223,7 +223,6 @@ CsmaChannel::TransmitEnd ()
   NS_LOG_LOGIC ("Receive");
 
   std::vector<CsmaDeviceRec>::iterator it;
-  uint32_t devId = 0;
   for (it = m_deviceList.begin (); it < m_deviceList.end (); it++)
     {
       if (it->IsActive ())
@@ -234,7 +233,6 @@ CsmaChannel::TransmitEnd ()
                                           &CsmaNetDevice::Receive, it->devicePtr,
                                           m_currentPkt->Copy (), m_deviceList[m_currentSrc].devicePtr);
         }
-      devId++;
     }
 
   // also schedule for the tx side to go back to IDLE
