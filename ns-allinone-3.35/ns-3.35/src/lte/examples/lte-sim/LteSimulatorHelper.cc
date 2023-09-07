@@ -263,8 +263,10 @@ void  LteSimulatorHelper::add_buildings() {
 }
 
 void  LteSimulatorHelper::print_buildings_info_comma_seperated(std::ostringstream& os) {
-	if (buildingPositionAlloc == nullptr)
+	if (buildingPositionAlloc == nullptr) {
+		os << "No buildings present" << std::endl;
 		return;
+	}
 //	os << "Propagation model," << m_buildingsPopagationLossModel << std::endl;
 	os << "Num Buildings, " << buildingPositionAlloc->GetSize() << std::endl;
 	buildingPositionAlloc->print(os, ",");

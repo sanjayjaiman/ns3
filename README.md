@@ -15,4 +15,16 @@ Finally the simulation would run with any environment setup and obtain average t
 Usage:
 In order to build an run this package from the "ns3/ns-allinone-3.35/ns-3.35" dir do the following:
 
-./waf configure --enable-examples --enable-tests;  ./waf build;  ./waf --run lte-sim
+./waf configure --enable-examples --enable-tests
+./waf build
+./waf --run lte-sim
+
+To run with buildings
+./waf --run "lte-sim --use_buildings=true"
+
+To execute in "test" mode where you'd get throughputs for a single UE being placed with different x/y values
+- Edit "input-defaults.txt" file
+    - Set "SimulationTestMode" to "true"
+    - Set SimulationTestOutputFile, SimulationTest_X_Range, SimulationTest_Y_Range if needed
+- Then run as above
+

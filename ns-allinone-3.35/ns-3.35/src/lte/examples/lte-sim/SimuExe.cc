@@ -209,11 +209,9 @@ void SimuExe::init() {
 		// The following call will pull pull all the building objects from a static list inside BuildingList class
 		// and mobility from enb_nodes object.  It will put the buildings into the enb mobility object.
 
-		if (verbosity >= 1) {
-			os << "================================================================================" << std::endl;
-			lte_simu_helper->print_buildings_info(os);
-			PrintGnuplottableBuildingListToFile ("buildings.txt");
-		}
+		os << "================================================================================" << std::endl;
+		lte_simu_helper->print_buildings_info(os);
+		PrintGnuplottableBuildingListToFile ("buildings.txt");
 	}
 
 	os << "================================================================================\n";
